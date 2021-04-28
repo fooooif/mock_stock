@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <meta charset="UTF-8">
+    <style>
+        .main {
+            width: 100%;
+        }
+    </style>
+    <title>SimulatedStock</title>
+</head>
+<body>
+
+<div class="wrap">
+    <div class="nav">
+        <h2>모의 주식 투자</h2>
+    </div>
+    <div class="content">
+        <div class="main">
+            <div class="card">
+                <a href="{{ url_for('kospi') }}" class="card-title"><img src="{{ url_for('static', filename='kospi.jpg') }}"></a>
+                <p class="card-text">코스피 정보</p>
+            </div>
+            <div class="card">
+                <a href="{{ url_for('kosdaq') }}" class="card-title"><img src="{{ url_for('static', filename='kosdaq.jpg') }}"></a>
+                <p class="card-text">코스닥 정보</p>
+            </div>
+            <div class="card">
+                <a href="{{ url_for('mypage') }}" class="card-title"><img src="{{ url_for('static', filename='account.jpg') }}"></a>
+                <p class="card-text">내 자산</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,101 @@
+:root {
+    --nav-height: 81px;
+    --main-bg-color: brown;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.wrap {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.nav {
+    display: flex;
+    width: 100%;
+    height: var(--nav-height);
+    background-color: azure;
+}
+
+.content {
+    display: flex;
+    width: 100%;
+    height: calc(100% - var(--nav-height));
+}
+
+.side {
+    background-color: #2a3b4c;
+    width: 20%;
+}
+
+.main {
+    width: 80%;
+    display: flex;
+    overflow-y: scroll;
+    flex-wrap: wrap;
+}
+
+.card {
+    width: calc(33% - 50px);
+    height: calc(40% - 100px);
+    margin: 20px;
+}
+
+.card img {
+    width: 300px;
+    height: 180px;
+}
+
+.search {
+    height: 40px;
+    width: 90%;
+    border: 3px solid #1b5ac2;
+    margin: 10px 0px 0px 30px;
+    background: #ffffff;
+}
+
+.search .search_form .search_kospi {
+    font-size: 16px;
+    width: 80%;
+    padding: 10px;
+    border: 0px;
+    outline:none;
+    float: left;
+}
+
+.search .search_form .search_kosdaq {
+    font-size: 16px;
+    width: 80%;
+    padding: 10px;
+    border: 0px;
+    outline:none;
+    float: left;
+}
+
+.search .search_form .search_btn {
+    width: 50px;
+    height: 100%;
+    border: 0px;
+    background: #1b5ac2;
+    outline: none;
+    float: right;
+    color: #ffffff
+}
+
+.plus {
+    color: red
+}
+
+.minus {
+    color: blue
+}
+
+table {
+    width: 100%;
+    border: 2px solid #444444;
+}

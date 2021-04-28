@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+    <!-- 구글폰트 -->
+    <link href="https://fonts.googleapis.com/css?family=Do+Hyeon&display=swap" rel="stylesheet">
+
+    <title>Kospi</title>
+    <script>
+        $(document).ready(function () {
+                showStocks("up");
+                showStocks("down");
+                showStocks("high");
+        });
+
+        function showStocks(sort) {
+            $(`#box_${sort}`).empty()
+            $.ajax({
+                type: "GET",
+                url: "/api/search",
+                data: {
+                    market: "kospi",
+                    sort,
+                    count: "10",
+                },
+                success: function (response) {
+                    let stocks = response;
+                    console.log(stocks);
+
+                    // 4. for 문을 활용하여 star 배열의 요소를 차례대로 조회합니다.
+                    stocks.forEach(stock => {
+                        const change_sign = stock["change"] === "RISE" ? "plus" : "FALL" ? "minus" : "even";
+                        const change = stock["change"] === "RISE" ? "▲" : "FALL" ? "▼" : "=";
+                        const changePrice = stock["changePrice"].toString().split(".")[0];
+                        const changeRate = (stock["changeRate"] * 100).toFixed(2) + "%";
+                        const name = decodeURIComponent(stock["name"]);
+                        const tradePrice = stock["tradePrice"].toString().split(".")[0];
+
+                        // 6. 영화인 카드를 만듭니다.
+                        const tempHtml = `<tr>
+                                            <td><span class="text">${name}</span></td>
+                                            <td><span class="num">${tradePrice}</span></td>
+                                            <td><span class="${change_sign}"><i>${change}</i>${changePrice}</span></td>
+                                            <td><span class="${change_sign}">${changeRate}</span></td>
+                                        </tr>`
+                        console.log(`#box_${sort}`)
+
+                        $(`.box_${sort}`).append(tempHtml);
+                    })
+                }
+            })
+        }
+
+        function searchStock() {
+            $(`.box_search`).empty();
+
+            const name = document.querySelector(".search_kospi").value;
+            console.log(name);
+
+            $.ajax({
+                type: "GET",
+                url: "/api/search",
+                data: {
+                    market: "kospi",
+                    name,
+                },
+                success: function (response) {
+                    const stock = response;
+                    console.log(stock);
+
+                    const accTradePrice = stock["accTradePrice"]
+                    const accTradeVolume = stock["accTradeVolume"]
+                    const change = stock["change"] === "RISE" ? "▲" : "FALL" ? "▼" : "=";
+                    const change_sign = stock["change"] === "RISE" ? "plus" : "FALL" ? "minus" : "even";
+                    const changePrice = stock["changePrice"].toString().split(".")[0];
+                    const changeRate = (stock["changeRate"] * 100).toFixed(2) + "%";
+                    const foreignRatio = (stock["foreignRatio"] * 100).toFixed(2) + "%";
+                    const marketCap = stock["marketCap"]
+                    const name = decodeURIComponent(stock["name"])
+                    const tradePrice = stock["tradePrice"].toString().split(".")[0];
+
+                    const tempHtml = `<table border="2">
+                                        <colgroup>
+                                            <col width="*">
+                                            <col width="*">
+                                            <col width="*">
+                                            <col width="*">
+                                            <col width="*">
+                                            <col width="*">
+                                            <col width="*">
+                                            <col width="*">
+                                        </colgroup>
+                                        <thead>
+                                            <tr>
+                                                <th>종목명</th>
+                                                <th>현재가</th>
+                                                <th>전일비</th>
+                                                <th>등락률</th>
+                                                <th>하루 총거래가</th>
+                                                <th>하루 총거래량</th>
+                                                <th>외국인 비율</th>
+                                                <th>시가총액</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <td><span class="text">${name}</span></td>
+                                            <td><span class="num">${tradePrice}</span></td>
+                                            <td><span class="${change_sign}"><i>${change}</i>${changePrice}</span></td>
+                                            <td><span class="${change_sign}">${changeRate}</span></td>
+                                            <td><span class="num">${accTradePrice}</span></td>
+                                            <td><span class="num">${accTradeVolume}</span></td>
+                                            <td><span class="text">${foreignRatio}</span></td>
+                                            <td><span class="num">${marketCap}</span></td>
+                                        </tbody>
+                                    </table><tr>
+                                </tr>`
+
+                    $(`.box_search`).append(tempHtml);
+                }
+            })
+        }
+    </script>
+</head>
+<body>
+<div class="wrap">
+    <div class="nav">
+        <a href="{{ url_for('home') }}"><h2>모의 주식 투자</h2></a>
+    </div>
+    <div class="content">
+        <div class="side">
+            <h3>코스피</h3>
+        </div>
+        <div class="main">
+            <div class="search">
+                <form class ="search_form">
+                    <input class="search_kospi" type="text" placeholder="코스피 검색">
+                    <button type="button" class="search_btn" onclick="searchStock()">검색</button>
+                </form>
+            </div>
+            <div class="col-md-9">
+                <div class="box_search">
+                </div>
+            </div>
+            <div class="card">
+                <h3>증가율 높은 주식 TOP10</h3>
+                <table border="2">
+                    <colgroup>
+                        <col width="*">
+                        <col width="84">
+                        <col width="84">
+                        <col width="84">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th class="first">종목명</th>
+                            <th>현재가</th>
+                            <th>전일비</th>
+                            <th class="last">등락률</th>
+                        </tr>
+                    </thead>
+                    <tbody class="box_up">
+                    </tbody>
+                </table>
+            </div>
+            <div class="card">
+                <h3>하락율 높은 주식 TOP10</h3>
+                <table border="2">
+                    <colgroup>
+                        <col width="*">
+                        <col width="84">
+                        <col width="84">
+                        <col width="84">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th class="first">종목명</th>
+                            <th>현재가</th>
+                            <th>전일비</th>
+                            <th class="last">등락률</th>
+                        </tr>
+                    </thead>
+                    <tbody class="box_down">
+                    </tbody>
+                </table>
+                </div>
+            <div class="card">
+                <h3>거래량 높은 주식 TOP10</h3>
+                <table border="2">
+                    <colgroup>
+                        <col width="*">
+                        <col width="84">
+                        <col width="84">
+                        <col width="84">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th class="first">종목명</th>
+                            <th>현재가</th>
+                            <th>전일비</th>
+                            <th class="last">등락률</th>
+                        </tr>
+                    </thead>
+                    <tbody class="box_high">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
